@@ -1,0 +1,7 @@
+print('Введите, пожалуйста, четыре числа:')
+a = int(input("Первое (a): "))
+b = int(input("Второе (b): "))
+c = int(input("Третье (c): "))
+d = int(input("Четвёртое (d): "))
+result = (a + b) - (c + d)
+print("(a + b) - (c + d) = ", result)
