@@ -7,12 +7,4 @@ def sec_convert(sec_total):
     time.append(str(hours))
     time.append(str(mins))
     time.append(str(sec))
-#    if hours != 0:
-#        time.append(str(hours))
-#    if mins != 0 or (hours != 0 and mins == 0 and sec != 0):
-#        time.append(str(mins))
-#    if sec != 0:
-#        time.append(str(sec))
-#    if sec + mins + hours == 0:
-#        time.append('no time data')
     return time
