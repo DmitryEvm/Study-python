@@ -4,9 +4,7 @@ num = []
 for i in range(3):
     num.append(random.randint(1, 4))
 print(num)
-n = 0
 dub = 0
-sum4 = 0
 num.sort()
 for i in range(len(num)-1):
     if num[i] == num[i+1]:
@@ -17,6 +15,7 @@ else:
     print('doubles: no')
 print('---')
 print(num)
+sum4 = 0
 if num[0] + num[1] == 4:
         sum4 += 1
 if num[0] + num[2] == 4:
