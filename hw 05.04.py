@@ -42,7 +42,7 @@ print('---')
 days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 for i in range(len(days)):
-    if i < 6+1:
+    if i < 5:
         print(i+1, days[i], '- weekday')
     else:
         print(i+1, days[i], '- weekend')
