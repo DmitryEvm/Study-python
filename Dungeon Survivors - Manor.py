@@ -4,103 +4,68 @@ def sec_convert(sec_total):
     mins = int(sec_tmp % 60)
     hours = int(sec_tmp / 60)
     time = list()
-    time.append(str(hours) + 'h.')
-    time.append(str(mins) + 'm.')
-    time.append(str(sec) + 's.')
+    time.append(str(hours).zfill(2) + 'h.')
+    time.append(str(mins).zfill(2) + 'm.')
+    time.append(str(sec).zfill(2) + 's.')
     return time
 
 
-scale = 2
+cmen = 210 - 5
+prod = 2
+step = 20
 
-step = 22
+food_cap = 300000
+wood_cap = 290000
+iron_cap = 230000
+crystal_cap = 40000
+mithril_cap = 35000
+res_cap = [food_cap, wood_cap, iron_cap, crystal_cap, mithril_cap]
 
-food_cap = 220000
-wood_cap = 200000
-iron_cap = 160000
-crystal_cap = 25000
-mithril_cap = 25000
+food_now = 200
+wood_now = 210000
+iron_now = 111000
+crystal_now = 24000
+mithril_now = 32000
+res_now = [food_now, wood_now, iron_now, crystal_now, mithril_now]
 
-food_now = 163400
-wood_now = 8700
-iron_now = 77000
-crystal_now = 1700
-mithril_now = 1100
+food_cmen = wood_cmen = iron_cmen = crystal_cmen = mithril_cmen = 1
+res_cmen = [food_cmen, wood_cmen, iron_cmen, crystal_cmen, mithril_cmen]
 
-wood_cost = 2
-iron_cost = 3
-crystal_cost = 4
-mithril_cost = 9
+res_cost = [0, 2, 3, 4, 9]
 
-food_income = wood_income = iron_income = crystal_income = mithril_income = 1
+res_ttf = [0] * 5
 
-craftsmen = 190
-c = 0
-while craftsmen > 0:
-
-    try:
-        food_ttf = int(((food_cap - food_now) / (food_income * scale)) * step)
-    except ZeroDivisionError:
-        food_ttf = 0
-    try:
-        wood_ttf = int(((wood_cap - wood_now) / (wood_income * scale)) * step)
-    except ZeroDivisionError:
-        wood_ttf = 0
-    try:
-        iron_ttf = int(((iron_cap - iron_now) / (iron_income * scale)) * step)
-    except ZeroDivisionError:
-        iron_ttf = 0
-    try:
-        crystal_ttf = int(((crystal_cap - crystal_now) / (crystal_income * scale)) * step)
-    except ZeroDivisionError:
-        crystal_ttf = 0
-    try:
-        mithril_ttf = int(((mithril_cap - mithril_now) / (mithril_income * scale)) * step)
-    except ZeroDivisionError:
-        mithril_ttf = 0
-
-    if food_ttf <= 0:
-        food_income += 1*scale
-        craftsmen -= 1
-
-    elif craftsmen <= 2:
-        food_income += 1*scale
-        craftsmen -= 1
-
-    elif food_ttf > 0 and wood_ttf >= iron_ttf and wood_ttf >= crystal_ttf and wood_ttf >= mithril_ttf and craftsmen >= wood_cost + 1:
-        wood_income += 1*scale
-        craftsmen -= 1
-        food_income -= wood_cost
-
-    elif food_ttf > 0 and iron_ttf >= wood_ttf and iron_ttf >= crystal_ttf and iron_ttf >= mithril_ttf and craftsmen >= iron_cost + 1:
-        iron_income += 1*scale
-        craftsmen -= 1
-        food_income -= iron_cost
-
-    elif food_ttf > 0 and crystal_ttf >= iron_ttf and crystal_ttf >= wood_ttf and crystal_ttf >= mithril_ttf and craftsmen >= crystal_cost + 1:
-        crystal_income += 1*scale
-        craftsmen -= 1
-        food_income -= crystal_cost
-
-    elif food_ttf > 0 and mithril_ttf >= iron_ttf and mithril_ttf >= crystal_ttf and mithril_ttf >= wood_ttf and craftsmen >= mithril_cost + 1:
-        mithril_income += 1*scale
-        craftsmen -= 1
-        food_income -= mithril_cost
-
+for i in range(len(res_ttf)):
+    total_cost = res_cmen[1] * res_cost[1] + res_cmen[2] * res_cost[2] + \
+                 res_cmen[3] * res_cost[3] + res_cmen[4] * res_cost[4]
+    if i == 0:
+        res_ttf[i] = int(((res_cap[i] - res_now[i]) / (res_cmen[i] * prod - total_cost)) * step)
     else:
-        food_income += 1 * scale
-        craftsmen -= 1
+        res_ttf[i] = int(((res_cap[i] - res_now[i]) / (res_cmen[i] * prod)) * step)
 
-    if scale != 1 and craftsmen < 3 and c == 0:
-        c += 1
-        food_income -= 1
-        wood_income -= 1
-        iron_income -= 1
-        crystal_income -= 1
-        mithril_income -= 1
+x = 0
+while cmen > 0:
+    x += 1
+    for i in range(len(res_ttf)):
+        total_cost = res_cmen[1] * res_cost[1] + res_cmen[2] * res_cost[2] + \
+                     res_cmen[3] * res_cost[3] + res_cmen[4] * res_cost[4]
+        if max(res_ttf) == res_ttf[i] and res_ttf[0] >= 0:
+            res_cmen[i] += 1
+            cmen -= 1
+            if i == 0:
+                res_ttf[i] = int(((res_cap[i] - res_now[i]) / ((res_cmen[i] * prod) - total_cost)) * step)
+            else:
+                res_ttf[i] = int(((res_cap[i] - res_now[i]) / (res_cmen[i] * prod)) * step)
+        else:
+            res_cmen[0] += 1
+            cmen -= 1
+            try:
+                res_ttf[0] = int(((res_cap[0] - res_now[0]) / ((res_cmen[0] * prod) - total_cost)) * step)
+            except ZeroDivisionError:
+                res_ttf[0] = 0
 
-print('FOOD', food_income, '\nfill up after:', sec_convert(food_ttf))
-print('WOOD', wood_income, '\nfill up after:', sec_convert(wood_ttf))
-print('IRON', iron_income, '\nfill up after:', sec_convert(iron_ttf))
-print('CRYSTAL', crystal_income, '\nfill up after:', sec_convert(crystal_ttf))
-print('MITHRIL', mithril_income, '\nfill up after:', sec_convert(mithril_ttf))
-
+print(f'FOOD:    {sec_convert(res_ttf[0])} Craftsmen: {res_cmen[0]}')
+print(f'WOOD:    {sec_convert(res_ttf[1])} Craftsmen: {res_cmen[1]}')
+print(f'IRON:    {sec_convert(res_ttf[2])} Craftsmen: {res_cmen[2]}')
+print(f'CRYSTAL: {sec_convert(res_ttf[3])} Craftsmen: {res_cmen[3]}')
+print(f'MITHRIL: {sec_convert(res_ttf[4])} Craftsmen: {res_cmen[4]}')
