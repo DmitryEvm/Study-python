@@ -21,11 +21,11 @@ crystal_cap = 40000
 mithril_cap = 35000
 res_cap = [food_cap, wood_cap, iron_cap, crystal_cap, mithril_cap]
 
-food_now = 200
-wood_now = 210000
-iron_now = 111000
-crystal_now = 24000
-mithril_now = 32000
+food_now = 80000
+wood_now = 120000
+iron_now = 10000
+crystal_now = 10000
+mithril_now = 30000
 res_now = [food_now, wood_now, iron_now, crystal_now, mithril_now]
 
 food_cmen = wood_cmen = iron_cmen = crystal_cmen = mithril_cmen = 1
@@ -44,28 +44,54 @@ for i in range(len(res_ttf)):
         res_ttf[i] = int(((res_cap[i] - res_now[i]) / (res_cmen[i] * prod)) * step)
 
 x = 0
+count1 = count2 = count3 = count4 = 0
 while cmen > 0:
     x += 1
     for i in range(len(res_ttf)):
         total_cost = res_cmen[1] * res_cost[1] + res_cmen[2] * res_cost[2] + \
                      res_cmen[3] * res_cost[3] + res_cmen[4] * res_cost[4]
-        if max(res_ttf) == res_ttf[i] and res_ttf[0] >= 0:
+
+        if res_ttf[0] == max(res_ttf) and cmen >= res_cost[i]:
+            temp = res_ttf.copy()
+            temp.remove(temp[0])
+            x = res_ttf.index(max(temp))
+            res_cmen[x] += 1
+            count1 += 1
+            cmen -= 1
+            print('1.',cmen)
+            res_ttf[x] = int(((res_cap[x] - res_now[x]) / (res_cmen[x] * prod)) * step)
+
+        if max(res_ttf) == res_ttf[i] and res_ttf[0] >= 0 and cmen > res_cost[i]:
             res_cmen[i] += 1
             cmen -= 1
+            count2 += 1
+            print('2.', cmen)
             if i == 0:
-                res_ttf[i] = int(((res_cap[i] - res_now[i]) / ((res_cmen[i] * prod) - total_cost)) * step)
+                try:
+                    res_ttf[i] = int(((res_cap[i] - res_now[i]) / ((res_cmen[i] * prod) - total_cost)) * step)
+                except ZeroDivisionError:
+                    res_ttf[i] = 0
             else:
                 res_ttf[i] = int(((res_cap[i] - res_now[i]) / (res_cmen[i] * prod)) * step)
+
         else:
-            res_cmen[0] += 1
-            cmen -= 1
-            try:
-                res_ttf[0] = int(((res_cap[0] - res_now[0]) / ((res_cmen[0] * prod) - total_cost)) * step)
-            except ZeroDivisionError:
-                res_ttf[0] = 0
+            if cmen > 0:
+                res_cmen[0] += 1
+                cmen -= 1
+                count3 += 1
+                print('3.', cmen)
+                try:
+                    res_ttf[0] = int(((res_cap[0] - res_now[0]) / ((res_cmen[0] * prod) - total_cost)) * step)
+                except ZeroDivisionError:
+                    res_ttf[0] = 0
+            else:
+                break
 
 print(f'FOOD:    {sec_convert(res_ttf[0])} Craftsmen: {res_cmen[0]}')
 print(f'WOOD:    {sec_convert(res_ttf[1])} Craftsmen: {res_cmen[1]}')
 print(f'IRON:    {sec_convert(res_ttf[2])} Craftsmen: {res_cmen[2]}')
 print(f'CRYSTAL: {sec_convert(res_ttf[3])} Craftsmen: {res_cmen[3]}')
 print(f'MITHRIL: {sec_convert(res_ttf[4])} Craftsmen: {res_cmen[4]}')
+print(cmen)
+print(sum(res_cmen))
+print(count1, count2, count3, count1 + count2 + count3)
