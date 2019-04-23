@@ -102,17 +102,17 @@ print(leap_list(2000, 2100))
 def season(month):
     if month == 12 or 0 < month < 3:
         return 'winter'
-    elif month in range(3, 5):
+    elif month in range(3, 5+1):
         return 'spring'
-    elif month in range(6, 8):
+    elif month in range(6, 8+1):
         return 'summer'
-    elif month in range(9, 11):
+    elif month in range(9, 11+1):
         return 'autumn'
     else:
         return 'error'
 
 
-some_month = 2
+some_month = 11
 print('season:', season(some_month))
 
 
