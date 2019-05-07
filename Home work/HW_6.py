@@ -99,3 +99,21 @@ some_square.change_size(-10)
 print(f'стороны квадрата: {some_square.a}')
 print(f'периметр квадрата: {some_square.calculate_perimeter()}')
 print('-----------')
+
+
+# курсы валют по отношению к 1BYN на сегодняшнюю дату
+base_url = "http://www.nbrb.by/API/ExRates/Rates?Periodicity=0"
+
+
+def get_cur():
+    import requests
+    url = base_url
+    response = requests.get(url).json()
+    for p in list(response):
+        price = p['Cur_OfficialRate']
+        price = '1 BYN - ' + (str(price)) + " " + p['Cur_Abbreviation']
+        print(price)
+
+
+print('Курс валют на сегодня:')
+get_cur()
