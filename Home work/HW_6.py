@@ -110,9 +110,9 @@ def get_cur():
     url = base_url
     response = requests.get(url).json()
     for p in list(response):
-        price = p['Cur_OfficialRate']
-        price = '1 BYN - ' + (str(price)) + " " + p['Cur_Abbreviation']
-        print(price)
+        cur = p['Cur_OfficialRate']
+        cur = '1 BYN - ' + (str(cur)) + " " + p['Cur_Abbreviation']
+        print(cur)
 
 
 print('Курс валют на сегодня:')
